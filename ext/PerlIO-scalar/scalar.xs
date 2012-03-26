@@ -125,6 +125,18 @@ PerlIOScalar_tell(pTHX_ PerlIO * f)
     return s->posn;
 }
 
+IV
+PerlIOScalar_eof(pTHX_ PerlIO * f)
+{
+    if (PerlIOBase(f)->flags & PERLIO_F_CANREAD) {
+        PerlIOScalar *s = PerlIOSelf(f, PerlIOScalar);
+        char *p;
+        STRLEN len;
+        p = SvPV(s->var, len);
+        return len - (STRLEN)(s->posn) <= 0;
+    }
+    return 1;
+}
 
 SSize_t
 PerlIOScalar_read(pTHX_ PerlIO *f, void *vbuf, Size_t count)
@@ -343,7 +355,7 @@ PERLIO_FUNCS_DECL(PerlIO_scalar) = {
     PerlIOScalar_close,
     PerlIOScalar_flush,
     PerlIOScalar_fill,
-    PerlIOBase_eof,
+    PerlIOScalar_eof,
     PerlIOBase_error,
     PerlIOBase_clearerr,
     PerlIOBase_setlinebuf,
