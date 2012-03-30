@@ -1,6 +1,7 @@
 package Search::Dict;
-require 5.000;
+require 5.15.9;
 require Exporter;
+use feature 'fc';
 
 use strict;
 
@@ -65,7 +66,7 @@ sub look {
     my($size, $blksize) = @stat[7,11];
     $blksize ||= 8192;
     $key =~ s/[^\w\s]//g if $dict;
-    $key = lc $key       if $fold;
+    $key = fc $key       if $fold;
     # find the right block
     my($min, $max) = (0, int($size / $blksize));
     my $mid;
@@ -78,7 +79,7 @@ sub look {
 	$_ = $xfrm->($_) if defined $xfrm;
 	chomp;
 	s/[^\w\s]//g if $dict;
-	$_ = lc $_   if $fold;
+	$_ = fc $_   if $fold;
 	if (defined($_) && $comp->($_, $key) < 0) {
 	    $min = $mid;
 	}
@@ -98,7 +99,7 @@ sub look {
 	$_ = $xfrm->($_) if defined $xfrm;
 	chomp;
 	s/[^\w\s]//g if $dict;
-	$_ = lc $_   if $fold;
+	$_ = fc $_   if $fold;
 	last if $comp->($_, $key) >= 0;
     }
     seek($fh,$min,0);
