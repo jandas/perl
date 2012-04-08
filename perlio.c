@@ -4311,7 +4311,22 @@ PerlIOBuf_dup(pTHX_ PerlIO *f, PerlIO *o, CLONE_PARAMS *param, int flags)
  return PerlIOBase_dup(aTHX_ f, o, param, flags);
 }
 
-
+IV
+PerlIOBuf_eof (pTHX_ PerlIO *f)
+{
+    if (!PerlIOValid(f))
+	return -1;
+    if (PerlIOBase(f)->flags & PERLIO_F_EOF)
+	return 1;
+    if (PerlIO_get_cnt(f))
+	return 0;
+    else {
+	PerlIO_fill(f);
+	if (PerlIOBase(f)->flags & PERLIO_F_EOF)
+	    return 1;
+	return PerlIO_get_cnt(f) == 0;
+    }
+}
 
 PERLIO_FUNCS_DECL(PerlIO_perlio) = {
     sizeof(PerlIO_funcs),
@@ -4333,7 +4348,7 @@ PERLIO_FUNCS_DECL(PerlIO_perlio) = {
     PerlIOBuf_close,
     PerlIOBuf_flush,
     PerlIOBuf_fill,
-    PerlIOBase_eof,
+    PerlIOBuf_eof,
     PerlIOBase_error,
     PerlIOBase_clearerr,
     PerlIOBase_setlinebuf,
@@ -4456,7 +4471,7 @@ PERLIO_FUNCS_DECL(PerlIO_pending) = {
     PerlIOPending_close,
     PerlIOPending_flush,
     PerlIOPending_fill,
-    PerlIOBase_eof,
+    PerlIOBuf_eof,
     PerlIOBase_error,
     PerlIOBase_clearerr,
     PerlIOBase_setlinebuf,
@@ -4810,7 +4825,7 @@ PERLIO_FUNCS_DECL(PerlIO_crlf) = {
     PerlIOBuf_close,
     PerlIOCrlf_flush,
     PerlIOBuf_fill,
-    PerlIOBase_eof,
+    PerlIOBuf_eof,
     PerlIOBase_error,
     PerlIOBase_clearerr,
     PerlIOBase_setlinebuf,

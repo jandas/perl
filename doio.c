@@ -1006,21 +1006,15 @@ Perl_do_eof(pTHX_ GV *gv)
         }
 
 	{
+	    int ret;
 	     /* getc and ungetc can stomp on errno */
 	    dSAVE_ERRNO;
-	    const int ch = PerlIO_getc(IoIFP(io));
-	    if (ch != EOF) {
-		(void)PerlIO_ungetc(IoIFP(io),ch);
-		RESTORE_ERRNO;
-		return FALSE;
-	    }
+	    ret = PerlIO_eof(IoIFP(io));
 	    RESTORE_ERRNO;
+	    if (!ret)
+		return FALSE;
 	}
 
-        if (PerlIO_has_cntptr(IoIFP(io)) && PerlIO_canset_cnt(IoIFP(io))) {
-	    if (PerlIO_get_cnt(IoIFP(io)) < -1)
-		PerlIO_set_cnt(IoIFP(io),-1);
-	}
 	if (PL_op->op_flags & OPf_SPECIAL) { /* not necessarily a real EOF yet? */
 	    if (gv != PL_argvgv || !nextargv(gv))	/* get another fp handy */
 		return TRUE;
