@@ -614,7 +614,7 @@ PerlIO_funcs PerlIO_encode = {
     PerlIOEncode_close,
     PerlIOEncode_flush,
     PerlIOEncode_fill,
-    PerlIOBase_eof,
+    PerlIOBuf_eof,
     PerlIOBase_error,
     PerlIOBase_clearerr,
     PerlIOBase_setlinebuf,

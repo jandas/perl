@@ -195,6 +195,7 @@ PERL_EXPORT_C SSize_t   PerlIOBase_unread(pTHX_ PerlIO *f, const void *vbuf, Siz
 PERL_EXPORT_C Size_t    PerlIOBuf_bufsiz(pTHX_ PerlIO *f);
 PERL_EXPORT_C IV        PerlIOBuf_close(pTHX_ PerlIO *f);
 PERL_EXPORT_C PerlIO *  PerlIOBuf_dup(pTHX_ PerlIO *f, PerlIO *o, CLONE_PARAMS *param, int flags);
+PERL_EXPORT_C IV        PerlIOBuf_eof(pTHX_ PerlIO *f);
 PERL_EXPORT_C IV        PerlIOBuf_fill(pTHX_ PerlIO *f);
 PERL_EXPORT_C IV        PerlIOBuf_flush(pTHX_ PerlIO *f);
 PERL_EXPORT_C STDCHAR * PerlIOBuf_get_base(pTHX_ PerlIO *f);
